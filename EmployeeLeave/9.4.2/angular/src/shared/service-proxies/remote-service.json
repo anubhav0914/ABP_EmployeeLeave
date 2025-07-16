@@ -1,0 +1,6 @@
+{
+  "defaults": {
+    "url": "http://localhost:5000",
+    "source": "http://localhost:5000/swagger/v1/swagger.json"
+  }
+}

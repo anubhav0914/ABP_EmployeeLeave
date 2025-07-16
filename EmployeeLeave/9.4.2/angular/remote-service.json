@@ -1,0 +1,6 @@
+{
+  "default": {
+    "url": "http://localhost:5000",
+    "type": "swagger"
+  }
+}

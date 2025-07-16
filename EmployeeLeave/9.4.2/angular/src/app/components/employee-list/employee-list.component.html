@@ -1,0 +1,34 @@
+<!-- src/app/components/employee-list/employee-list.component.html -->
+<div class="p-4">
+  <h2 class="text-2xl font-bold mb-4">Employee List</h2>
+
+  <div *ngIf="loading" class="text-blue-600">Loading employees...</div>
+  <div *ngIf="error" class="text-red-600">{{ error }}</div>
+
+  <table *ngIf="!loading && employees.length > 0" class="w-full table-auto border border-gray-300">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="p-2 border">ID</th>
+        <th class="p-2 border">First Name</th>
+        <th class="p-2 border">Last Name</th>
+        <th class="p-2 border">Email</th>
+        <th class="p-2 border">Department</th>
+        <th class="p-2 border">Date of Joining</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let emp of employees">
+        <td class="p-2 border">{{ emp.id }}</td>
+        <td class="p-2 border">{{ emp.firstName }}</td>
+        <td class="p-2 border">{{ emp.lastName }}</td>
+        <td class="p-2 border">{{ emp.email }}</td>
+        <td class="p-2 border">{{ emp.department }}</td>
+        <!-- <td class="p-2 border">{{ emp. | date }}</td> -->
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && employees.length === 0" class="text-gray-600 mt-4">
+    No employees found.
+  </div>
+</div>
