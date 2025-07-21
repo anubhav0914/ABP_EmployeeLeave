@@ -12,11 +12,13 @@ namespace EmployeeLeave.Services.EntityServices;
 public class FounderServices : ApplicationService, IFounderServices
 {   
     private readonly IRepository<Employee, long> _employeeRepository;
+    private readonly IRepository<Manager, long> _managerRepository;
+
 
     private readonly IRepository<LeaveRequest, long> _leaveRepository;
     private readonly IRepository<Founder, long> _founderRepository;
 
-   
+
 
     public FounderServices(IRepository<Employee, long> employeeRepository,
     IRepository<Manager, long> managerRepository,
@@ -27,8 +29,32 @@ public class FounderServices : ApplicationService, IFounderServices
         _employeeRepository = employeeRepository;
         _leaveRepository = leaveRepository;
         _founderRepository = founderREpository;
+        _managerRepository  = managerRepository;
 
     }
+
+    public async Task<IActionResult> ApproveEmployee(long employeeId)
+    {
+        try
+        {
+            var exisitingEmployee = await _employeeRepository.FirstOrDefaultAsync(employeeId);
+
+            if (exisitingEmployee == null)
+            {
+                return new BadRequestObjectResult("No leave Reqest found Request not found.");
+            }
+
+            exisitingEmployee.IsApprovedByFounder = true;
+            await _employeeRepository.UpdateAsync(exisitingEmployee);
+            return new OkObjectResult("Employee approved successfully.");
+
+        }
+        catch (Exception err)
+        {
+            return new BadRequestObjectResult("Inernal Server Error" + err.Message);
+        }
+    }
+
     public async Task<IActionResult> ApproveLeave(ApproveLeaveDto dto)
     {
         try
@@ -53,9 +79,31 @@ public class FounderServices : ApplicationService, IFounderServices
         }
     }
 
+    public  async Task<IActionResult> ApproveManager(long managerId)
+    {
+        try
+        {
+            var manager = await _managerRepository.FirstOrDefaultAsync(m=>m.Id == managerId);
+
+            if (manager == null)
+            {
+                return new BadRequestObjectResult("No manager found found Request not found.");
+            }
+
+            manager.IsApproved_by_Founder = true;
+            await _managerRepository.UpdateAsync(manager);
+            return new OkObjectResult("Manager approved successfully.");
+
+        }
+        catch (Exception err)
+        {
+            return new BadRequestObjectResult("Inernal Server Error" + err.Message);
+        }
+    }
+
     public async Task<IActionResult> Delete(long id)
     {
-        await _founderRepository.DeleteAsync(id);
+        // await _founderRepository.DeleteAsync(id);
         return new OkObjectResult("Deleted  successfully.");
     }
 }

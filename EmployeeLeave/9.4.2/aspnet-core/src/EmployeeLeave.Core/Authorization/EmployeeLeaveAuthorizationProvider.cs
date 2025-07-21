@@ -13,25 +13,21 @@ namespace EmployeeLeave.Authorization
             context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
 
-            var pages = context.CreatePermission("Pages", L("Pages"));
+            context.CreatePermission(PermissionNames.Employee_Create, L("Create Employee"));
+            context.CreatePermission(PermissionNames.Employee_Update, L("Update Employee"));
+            context.CreatePermission(PermissionNames.Employee_Delete, L("Delete Employee"));
+            context.CreatePermission(PermissionNames.Employee_View, L("View Employees"));
 
-            var employee = pages.CreateChildPermission("Pages.Employee", L("Employee"));
-            employee.CreateChildPermission("Pages.Employee.Create", L("CreateEmployee"));
-            employee.CreateChildPermission("Pages.Employee.Update", L("UpdateEmployee"));
-            employee.CreateChildPermission("Pages.Employee.Delete", L("DeleteEmployee"));
-            employee.CreateChildPermission("Pages.Employee.View", L("ViewEmployees"));
+            context.CreatePermission(PermissionNames.LeaveType_Create, L("Create LeaveType"));
+            context.CreatePermission(PermissionNames.LeaveType_Update, L("Update LeaveType"));
+            context.CreatePermission(PermissionNames.LeaveType_Delete, L("Delete LeaveType"));
+            context.CreatePermission(PermissionNames.LeaveType_View, L("View LeaveTypes"));
 
-            var leaveType = pages.CreateChildPermission("Pages.LeaveType", L("LeaveType"));
-            leaveType.CreateChildPermission("Pages.LeaveType.Create", L("CreateLeaveType"));
-            leaveType.CreateChildPermission("Pages.LeaveType.Update", L("UpdateLeaveType"));
-            leaveType.CreateChildPermission("Pages.LeaveType.Delete", L("DeleteLeaveType"));
-            leaveType.CreateChildPermission("Pages.LeaveType.View", L("ViewLeaveTypes"));
-
-            var leaveRequest = pages.CreateChildPermission("Pages.LeaveRequest", L("LeaveRequest"));
-            leaveRequest.CreateChildPermission("Pages.LeaveRequest.Create", L("CreateLeaveRequest"));
-            leaveRequest.CreateChildPermission("Pages.LeaveRequest.View", L("ViewLeaveRequests"));
-            leaveRequest.CreateChildPermission("Pages.LeaveRequest.ApproveReject", L("ApproveRejectLeave"));
-            leaveRequest.CreateChildPermission("Pages.LeaveRequest.CancelDelete", L("CancelDeleteLeaveRequest"));
+            context.CreatePermission(PermissionNames.LeaveRequest_Create, L("Create LeaveRequest"));
+            context.CreatePermission(PermissionNames.LeaveRequest_ApproveReject, L("Approve/Reject LeaveRequest"));
+            context.CreatePermission(PermissionNames.LeaveRequest_View_All, L("View All LeaveRequests"));
+            context.CreatePermission(PermissionNames.LeaveRequest_View_Own, L("View Own LeaveRequests"));
+            context.CreatePermission(PermissionNames.LeaveRequest_Cancel_Own, L("Cancel Own LeaveRequests"));
         }
 
         private static ILocalizableString L(string name)

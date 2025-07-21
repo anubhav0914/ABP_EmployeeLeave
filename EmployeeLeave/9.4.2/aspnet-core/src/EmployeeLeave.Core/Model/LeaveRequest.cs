@@ -1,5 +1,6 @@
 using System;
 using Abp.Domain.Entities;
+using EmployeeLeave.Authorization.Users;
 using EmployeeLeave.Model;
 
 namespace EmployeeLeave;
@@ -25,7 +26,7 @@ public class LeaveRequest : Entity<long>
     public DateTime ToDate { get; set; }
 
     public long? Founder_Id_approved_rejected_BY { get; set; }
-    public Founder? Founder { get; set; }
+    public User? User { get; set; }
 
     public string? Reason { get; set; }
 

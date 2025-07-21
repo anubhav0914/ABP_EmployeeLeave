@@ -23,7 +23,7 @@
         <td class="p-2 border">{{ emp.lastName }}</td>
         <td class="p-2 border">{{ emp.email }}</td>
         <td class="p-2 border">{{ emp.department }}</td>
-        <!-- <td class="p-2 border">{{ emp. | date }}</td> -->
+        <td class="p-2 border">{{ emp.dateOfJoining | date: 'mediumDate' }}</td>
       </tr>
     </tbody>
   </table>
@@ -31,4 +31,7 @@
   <div *ngIf="!loading && employees.length === 0" class="text-gray-600 mt-4">
     No employees found.
   </div>
+   <button (click)="goBack()" class="bg-gray-300 text-black font-semibold px-4 py-2 mt-2 rounded hover:bg-gray-400">
+      Back
+    </button>
 </div>

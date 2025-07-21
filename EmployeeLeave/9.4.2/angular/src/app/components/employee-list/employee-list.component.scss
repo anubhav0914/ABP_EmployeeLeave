@@ -1,0 +1,57 @@
+// employee-list.component.scss
+
+:host {
+  display: block;
+  padding: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #2d3748;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+  th, td {
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    text-align: left;
+  }
+
+  thead {
+    background-color: #f7fafc;
+    color: #1a202c;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+  }
+
+  tbody tr:hover {
+    background-color: #edf2f7;
+    transition: background-color 0.2s ease-in-out;
+  }
+}
+
+.text-blue-600 {
+  color: #2563eb;
+}
+
+.text-red-600 {
+  color: #dc2626;
+}
+
+.text-gray-600 {
+  color: #4b5563;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}

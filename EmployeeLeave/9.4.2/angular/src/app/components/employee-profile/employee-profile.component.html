@@ -1,0 +1,67 @@
+<div class="profile-container">
+  <div class="card">
+    <h2 class="title">Employee Profile</h2>
+
+    <div class="profile-field">
+      <span class="label">Name:</span>
+      <span class="value">{{ employee?.firstName }} {{ employee?.lastName }}</span>
+    </div>
+
+    <div class="profile-field">
+      <span class="label">Email:</span>
+      <span class="value">{{ employee?.email }}</span>
+    </div>
+
+    <div class="profile-field">
+      <span class="label">Department:</span>
+      <span class="value">{{ employee?.department }}</span>
+    </div>
+
+    <div class="profile-field">
+      <span class="label">Date of Joining:</span>
+      <span class="value">{{ employee?.dateOfJoining | date: 'mediumDate' }}</span>
+    </div>
+
+    <div class="button-container">
+      <button class="apply-btn" (click)="applyForLeave()">Apply for Leave</button>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="leaveRequests?.length">
+    <h3 class="title">My Leave Requests</h3>
+    <table class="leave-table">
+      <thead>
+        <tr>
+          <th>Leave Type</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let leave of leaveRequests">
+          <td>{{ leave.leaveTypeId }}</td>
+          <td>{{ leave.fromDate | date: 'mediumDate' }}</td>
+          <td>{{ leave.toDate | date: 'mediumDate' }}</td>
+          <td>
+            <span [ngClass]="{
+              'status-pending': leave.status === 0,
+              'status-approved': leave.status === 1,
+              'status-rejected': leave.status === 2
+            }">
+              {{ leave.status }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="leaveRequests.length == 0" class="no-requests">
+    <p>No leave requests found.</p>
+  </div>
+
+  <button (click)="goBack()" class="bg-gray-300 text-black font-semibold px-4 py-2 mt-2 rounded hover:bg-gray-400">
+      Back
+    </button>
+</div>

@@ -1,0 +1,64 @@
+<div class="p-6 max-w-4xl mx-auto bg-white shadow-md rounded-xl">
+  <button (click)="goBack()" class="bg-gray-300 text-black font-semibold px-4 py-2 mt-2 rounded hover:bg-gray-400">
+      Back
+    </button>
+  <div class="flex border-b border-gray-200 mb-6 space-x-6">
+    <button
+      class="pb-2 text-lg font-semibold focus:outline-none border-b-2 transition-colors duration-300"
+      [ngClass]="selectedTab === 'create' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-blue-500'"
+      (click)="selectedTab = 'create'"
+    >
+      ➕ Create Leave Type
+    </button>
+    <button
+      class="pb-2 text-lg font-semibold focus:outline-none border-b-2 transition-colors duration-300"
+      [ngClass]="selectedTab === 'list' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-blue-500'"
+      (click)="selectedTab = 'list'"
+    >
+      📋 All Leave Types
+    </button>
+  </div>
+
+  <!-- Create Form -->
+  <div *ngIf="selectedTab === 'create'">
+    <form [formGroup]="leaveTypeForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Name</label>
+        <input type="text" formControlName="name"
+               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Description</label>
+        <input type="text" formControlName="description"
+               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Max Days Allowed</label>
+        <input type="number" formControlName="maxDaysAllowed"
+               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <button type="submit"
+              class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
+        ➤ Submit
+      </button>
+    </form>
+  </div>
+
+  <!-- List View -->
+  <div *ngIf="selectedTab === 'list'">
+    <div *ngIf="leaveTypes.length === 0" class="text-center text-gray-500 mt-8">
+      🚫 No leave types found.
+    </div>
+
+    <div *ngIf="leaveTypes.length > 0" class="space-y-4 mt-6">
+      <div *ngFor="let lt of leaveTypes" class="bg-gray-50 p-4 rounded-lg shadow-sm border">
+        <h3 class="text-lg font-bold text-blue-700">{{ lt.name }}</h3>
+        <p class="text-gray-600">{{ lt.description }}</p>
+        <span class="text-sm text-gray-500">Max Days: {{ lt.maxDaysAllowed }}</span>
+      </div>
+    </div>
+  </div>
+</div>

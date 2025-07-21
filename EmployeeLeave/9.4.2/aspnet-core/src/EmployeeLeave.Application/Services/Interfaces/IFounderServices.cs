@@ -11,7 +11,8 @@ namespace EmployeeLeave.Services.Interfaces;
 public interface IFounderServices : IApplicationService
 {
     public Task<IActionResult> ApproveLeave(ApproveLeaveDto employeeId);
-    public Task<IActionResult> Delete(long id);
 
+    public Task<IActionResult> ApproveEmployee(long employeeId);
+    public Task<IActionResult> ApproveManager(long managerId);
 
 }

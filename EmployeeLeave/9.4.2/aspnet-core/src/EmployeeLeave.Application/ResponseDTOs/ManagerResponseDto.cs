@@ -15,6 +15,8 @@ public class ManagerResponseDto
     public DateTime DateOfJoining { get; set; }
     public int Work_experince_year { get; set; }
     public bool IsActive { get; set; } = false;
+
+    public bool IsAppliedForEmployeeForManager { get; set; }
     public bool IsApproved_by_Founder { get; set; } = false;
 
     public UserDto User { get; set; }

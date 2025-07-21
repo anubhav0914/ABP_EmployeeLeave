@@ -11,6 +11,5 @@ public class Founder : Entity<long>
     public long UserId { get; set; }
     public virtual User User { get; set; }
     public string UserName { get; set; }
-    public ICollection<LeaveRequest> LeaveRequests { get; set; }
     public int? TenantId { get; set; }
 }

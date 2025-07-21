@@ -1062,7 +1062,7 @@ export class TokenAuthServiceProxy {
                 "Accept": "text/plain"
             })
         };
-
+        
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
             return this.processAuthenticate(response_);
         })).pipe(_observableCatch((response_: any) => {

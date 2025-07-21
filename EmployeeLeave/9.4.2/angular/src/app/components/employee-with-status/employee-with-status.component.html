@@ -1,0 +1,93 @@
+<div class="p-6">
+  <!-- Tabs -->
+   <button (click)="goBack()" class="bg-gray-300 text-black font-semibold px-4 py-2 mt-2 rounded hover:bg-gray-400">
+      Back
+   </button>
+  <div class="flex space-x-4 mb-6 bg-gray-100 p-4 rounded-lg shadow-md justify-center">
+    <button 
+      class="px-4 py-2 rounded-md transition duration-300 font-medium"
+      [class.bg-blue-600]="activeTab === 'all'" 
+      [class.text-white]="activeTab === 'all'" 
+      [class.bg-white]="activeTab !== 'all'"
+      [class.text-blue-600]="activeTab !== 'all'"
+      (click)="activeTab = 'all'">
+      All Employee
+    </button>
+
+    <button 
+      class="px-4 py-2 rounded-md transition duration-300 font-medium"
+      [class.bg-blue-600]="activeTab === 'approved'" 
+      [class.text-white]="activeTab === 'approved'" 
+      [class.bg-white]="activeTab !== 'approved'"
+      [class.text-blue-600]="activeTab !== 'approved'"
+      (click)="activeTab = 'approved'">
+      Approved Employee
+    </button>
+
+    <button 
+      class="px-4 py-2 rounded-md transition duration-300 font-medium"
+      [class.bg-blue-600]="activeTab === 'requests'" 
+      [class.text-white]="activeTab === 'requests'" 
+      [class.bg-white]="activeTab !== 'requests'"
+      [class.text-blue-600]="activeTab !== 'requests'"
+      (click)="activeTab = 'requests'">
+      Manager Employee
+    </button>
+  </div>
+
+  <!-- All Employees -->
+  <div *ngIf="activeTab === 'all'" class="space-y-4">
+    <h2 class="text-xl font-semibold text-blue-600">All Employees</h2>
+    <div *ngIf="allEmployeess?.length > 0; else noAllEmployees">
+      <div *ngFor="let employee of allEmployeess" class="p-4 bg-white rounded-md shadow">
+        <p><strong>Name:</strong> {{ employee.user.fullName }}</p>
+        <p><strong>Email:</strong> {{ employee.user.emailAddress }}</p>
+        <p><strong>Experience:</strong> {{ employee.work_experince_year }} years</p>
+        <p><strong>Joined:</strong> {{ employee.dateOfJoining | date }}</p>
+        <p><strong>Approved by Founder:</strong> {{ employee.isApproved_by_Founder }}</p>
+      </div>
+    </div>
+    <ng-template #noAllEmployees>
+      <p class="text-center text-gray-500">No data found</p>
+    </ng-template>
+  </div>
+
+  <!-- Approved Employees -->
+  <div *ngIf="activeTab === 'approved'" class="space-y-4">
+    <h2 class="text-xl font-semibold text-green-700">Approved Employees</h2>
+    <div *ngIf="approvedEmployees?.length > 0; else noApprovedEmployees">
+      <div *ngFor="let employee of approvedEmployees" class="p-4 bg-green-100 rounded-md shadow">
+        <p><strong>Name:</strong> {{ employee.user.fullName }}</p>
+        <p><strong>Email:</strong> {{ employee.user.emailAddress }}</p>
+        <p><strong>Date of Joining:</strong> {{ employee.dateOfJoining | date }}</p>
+        <p><strong>Experience:</strong> {{ employee.work_experince_year }} years</p>
+      </div>
+    </div>
+    <ng-template #noApprovedEmployees>
+      <p class="text-center text-gray-500">No data found</p>
+    </ng-template>
+  </div>
+
+  <!-- Manager Requests -->
+  <div *ngIf="activeTab === 'requests'" class="space-y-4">
+    <h2 class="text-xl font-semibold text-yellow-700">Manager Requests</h2>
+    <div *ngIf="requestedEmployees?.length > 0; else noRequests">
+      <div *ngFor="let employee of requestedEmployees" class="p-4 bg-yellow-100 rounded-md shadow flex justify-between items-center">
+        <div>
+          <p><strong>Name:</strong> {{ employee.user.fullName }}</p>
+          <p><strong>Email:</strong> {{ employee.user.emailAddress }}</p>
+          <p><strong>Date of Joining:</strong> {{ employee.dateOfJoining | date }}</p>
+          <p><strong>Experience:</strong> {{ employee.work_experince_year }} years</p>
+        </div>
+        <button 
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+          (click)="approveEmployee(employee.id)">
+          Approve
+        </button>
+      </div>
+    </div>
+    <ng-template #noRequests>
+      <p class="text-center text-gray-500">No data found</p>
+    </ng-template>
+  </div>
+</div>

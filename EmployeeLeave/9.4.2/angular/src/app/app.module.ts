@@ -23,9 +23,7 @@ import { SidebarLogoComponent } from './layout/sidebar-logo.component';
 import { SidebarUserPanelComponent } from './layout/sidebar-user-panel.component';
 import { SidebarMenuComponent } from './layout/sidebar-menu.component';
 import { AuthModule } from './auth/auth.module';
-import { Client } from '../shared/service-proxies/employee-service-proxy'; 
-import { clientFactory } from './factories/client-factory';
-import { EmployeeServiceProxyModule } from '@shared/service-proxies/employee-service-proxy.module';
+import { EmployeeServicesService } from './shared/service-proxies/employee/api/employeeServices.service';
 
 
 @NgModule({
@@ -54,12 +52,12 @@ import { EmployeeServiceProxyModule } from '@shared/service-proxies/employee-ser
         CollapseModule,
         TabsModule,
         ServiceProxyModule,
-        EmployeeServiceProxyModule,
         NgxPaginationModule,
         SharedModule,
         AuthModule
     ],
     providers: [
+
     //     {
     //   provide: Client,
     //   useFactory: clientFactory

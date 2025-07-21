@@ -13,6 +13,9 @@ public interface IEmployeeServices : IApplicationService
 {
     public Task<ApiResponse<EmployeeResponseDto>> RegisterEmployee(EmployeeDto dto);
     public Task<ApiResponse<List<EmployeeResponseDto>>> GetAllEmployee();
+    public Task<ApiResponse<List<EmployeeResponseDto>>> GetAllEmployeeRequested();
+    public Task<ApiResponse<List<EmployeeResponseDto>>> GetAllEmployeeApproved();
+
     public Task<ApiResponse<EmployeeResponseDto>> GetById(long id);
     public Task<ApiResponse<EmployeeResponseDto>> DeleteEmployee(long id);
     public Task<ApiResponse<EmployeeResponseDto>> Update(EmployeeDto dto);

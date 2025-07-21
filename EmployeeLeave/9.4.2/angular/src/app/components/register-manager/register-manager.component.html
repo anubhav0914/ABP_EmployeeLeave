@@ -1,0 +1,26 @@
+<div class="register-container">
+  <div class="title">Register as Manager</div>
+  <div class="subtitle">Fill your details below</div>
+
+  <form [formGroup]="managerForm" (ngSubmit)="onSubmit()" class="register-form">
+    <div>
+      <label for="dateOfJoining">Date of Joining</label>
+      <input type="date" formControlName="dateOfJoining" />
+    </div>
+
+    <div>
+      <label for="work_experince_year">Work Experience (Years)</label>
+      <input type="number" formControlName="work_experince_year" />
+    </div>
+
+    <div>
+      <label for="isActive">Is Active</label>
+      <input type="checkbox" formControlName="isActive" />
+    </div>
+
+    <button type="submit" [disabled]="managerForm.invalid">Register</button>
+  </form>
+  <button (click)="goBack()" class="bg-gray-300 text-black font-semibold px-4 py-2 mt-2 rounded hover:bg-gray-400">
+      Back
+    </button>
+</div>

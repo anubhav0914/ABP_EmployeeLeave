@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Domain.Repositories;
@@ -211,14 +212,132 @@ public class ManagerServices : ApplicationService, IManagerServices
         }
     }
 
+    public async Task<ApiResponse<List<ManagerResponseDto>>> GetMangerRoleApproved()
+    {
+        try
+        {
+            var managers = await _managerRepository
+                .GetAllIncluding(m => m.User)
+                .Where(m=> m.IsApproved_by_Founder == true)
+                .ToListAsync();
+            
+
+            if (managers == null || managers.Count == 0)
+            {
+                return new ApiResponse<List<ManagerResponseDto>>
+                {
+                    status = false,
+                    statusCode = 404,
+                    message = "No Manager found.",
+                    data = null
+                };
+            }
+
+            var managerDtos = _mapper.Map<List<ManagerResponseDto>>(managers);
+            for (int i = 0; i < managers.Count; i++)
+            {
+                managerDtos[i].Id = managers[i].Id;
+                var userDto = new UserDto
+                {
+                    UserName = managers[i].User.UserName,
+                    Name = managers[i].User.Name,
+                    Surname = managers[i].User.Surname,
+                    EmailAddress = managers[i].User.EmailAddress,
+                    IsActive = managers[i].User.IsActive,
+                    FullName = managers[i].User.FullName
+                };
+                managerDtos[i].User = userDto;
+            }
+
+            return new ApiResponse<List<ManagerResponseDto>>
+            {
+                status = true,
+                statusCode = 200,
+                message = "Mnager retrieved successfully.",
+                data = managerDtos
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse<List<ManagerResponseDto>>
+            {
+                status = false,
+                statusCode = 500,
+                message = $"Error retrieving employees: {ex.Message}",
+                data = null
+            };
+        }
+    }
+
+    public async Task<ApiResponse<List<ManagerResponseDto>>> GetMangerRoleRequests()
+    {
+        try
+        {
+            var managers = await _managerRepository
+                .GetAllIncluding(m => m.User)
+                .Where(m=>m.IsApproved_by_Founder == false )
+                .ToListAsync();
+
+            if (managers == null || managers.Count == 0)
+            {
+                return new ApiResponse<List<ManagerResponseDto>>
+                {
+                    status = false,
+                    statusCode = 404,
+                    message = "No Manager found.",
+                    data = null
+                };
+            }
+
+            var managerDtos = _mapper.Map<List<ManagerResponseDto>>(managers);
+            for (int i = 0; i < managers.Count; i++)
+            {
+                managerDtos[i].Id = managers[i].Id;
+                var userDto = new UserDto
+                {
+                    UserName = managers[i].User.UserName,
+                    Name = managers[i].User.Name,
+                    Surname = managers[i].User.Surname,
+                    EmailAddress = managers[i].User.EmailAddress,
+                    IsActive = managers[i].User.IsActive,
+                    FullName = managers[i].User.FullName
+                };
+                managerDtos[i].User = userDto;
+            }
+
+            return new ApiResponse<List<ManagerResponseDto>>
+            {
+                status = true,
+                statusCode = 200,
+                message = "Mnager retrieved successfully.",
+                data = managerDtos
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse<List<ManagerResponseDto>>
+            {
+                status = false,
+                statusCode = 500,
+                message = $"Error retrieving employees: {ex.Message}",
+                data = null
+            };
+        }
+    }
+
     public async Task<IActionResult> RegisterManger(ManagerDto dto)
     {
         var existUser = await _userManager.FindByIdAsync(dto.UserId.ToString());
+        
         if (existUser == null)
         {
             return new BadRequestObjectResult("there is now user with this id");
         }
+        await _userManager.AddToRoleAsync(existUser, "Manager");
         var manager = _mapper.Map<Manager>(dto);
+        manager.IsAppliedForEmployeeForManager = true;
+        manager.IsApproved_by_Founder = false;
+        
         var result = await _managerRepository.InsertAsync(manager);
 
         if (result != null)

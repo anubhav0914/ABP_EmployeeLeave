@@ -22,10 +22,7 @@ namespace EmployeeLeave
                    .IsRequired()
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(f => f.LeaveRequests)
-                   .WithOne(lr => lr.Founder)
-                   .HasForeignKey(lr => lr.Founder_Id_approved_rejected_BY)
-                   .OnDelete(DeleteBehavior.Restrict); // Or Cascade, based on your logic
+            
         }
     }
 }

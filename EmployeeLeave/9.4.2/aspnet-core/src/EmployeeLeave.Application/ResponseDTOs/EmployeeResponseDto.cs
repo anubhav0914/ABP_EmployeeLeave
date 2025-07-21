@@ -19,6 +19,8 @@ public class EmployeeResponseDto
     public string Email { get; set; }
 
     public string Department { get; set; }
+    public bool IsAppliedForEmployeeForManager { get; set; } 
+    public bool IsApprovedByFounder { get; set; } = false;
 
     public DateOnly DateOfJoining { get; set; }
     

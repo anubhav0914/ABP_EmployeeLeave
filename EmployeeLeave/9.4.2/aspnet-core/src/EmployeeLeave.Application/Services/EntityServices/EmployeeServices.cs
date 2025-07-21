@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Abp.Application.Services;
@@ -80,6 +81,116 @@ public class EmployeeServices : ApplicationService, IEmployeeServices
         try
         {
             var employees = await _employeeRepository.GetAllIncluding(m => m.User)
+                .ToListAsync();
+
+            if (employees == null || employees.Count == 0)
+            {
+                return new ApiResponse<List<EmployeeResponseDto>>
+                {
+                    status = false,
+                    statusCode = 404,
+                    message = "No employees found.",
+                    data = null
+                };
+            }
+
+            var employeeDtos = _objectMapper.Map<List<EmployeeResponseDto>>(employees);
+            for (int i = 0; i < employees.Count; i++)
+            {
+                employeeDtos[i].Id = employees[i].Id;
+                var userDto = new UserDto
+                {
+                    UserName = employees[i].User.UserName,
+                    Name = employees[i].User.Name,
+                    Surname = employees[i].User.Surname,
+                    EmailAddress = employees[i].User.EmailAddress,
+                    IsActive = employees[i].User.IsActive,
+                    FullName = employees[i].User.FullName
+                };
+                employeeDtos[i].user = userDto;
+            }
+
+            return new ApiResponse<List<EmployeeResponseDto>>
+            {
+                status = true,
+                statusCode = 200,
+                message = "Employees retrieved successfully.",
+                data = employeeDtos
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse<List<EmployeeResponseDto>>
+            {
+                status = false,
+                statusCode = 500,
+                message = $"Error retrieving employees: {ex.Message}",
+                data = null
+            };
+        }
+    }
+
+    public async Task<ApiResponse<List<EmployeeResponseDto>>> GetAllEmployeeApproved()
+    {
+        try
+        {
+            var employees = await _employeeRepository.GetAllIncluding(m => m.User)
+            .Where(m=>m.IsApprovedByFounder == true)
+                .ToListAsync();
+
+            if (employees == null || employees.Count == 0)
+            {
+                return new ApiResponse<List<EmployeeResponseDto>>
+                {
+                    status = false,
+                    statusCode = 404,
+                    message = "No employees found.",
+                    data = null
+                };
+            }
+
+            var employeeDtos = _objectMapper.Map<List<EmployeeResponseDto>>(employees);
+            for (int i = 0; i < employees.Count; i++)
+            {
+                employeeDtos[i].Id = employees[i].Id;
+                var userDto = new UserDto
+                {
+                    UserName = employees[i].User.UserName,
+                    Name = employees[i].User.Name,
+                    Surname = employees[i].User.Surname,
+                    EmailAddress = employees[i].User.EmailAddress,
+                    IsActive = employees[i].User.IsActive,
+                    FullName = employees[i].User.FullName
+                };
+                employeeDtos[i].user = userDto;
+            }
+
+            return new ApiResponse<List<EmployeeResponseDto>>
+            {
+                status = true,
+                statusCode = 200,
+                message = "Employees retrieved successfully.",
+                data = employeeDtos
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse<List<EmployeeResponseDto>>
+            {
+                status = false,
+                statusCode = 500,
+                message = $"Error retrieving employees: {ex.Message}",
+                data = null
+            };
+        }
+    }
+
+    public  async Task<ApiResponse<List<EmployeeResponseDto>>> GetAllEmployeeRequested()
+    {
+        try
+        {
+            var employees = await _employeeRepository.GetAllIncluding(m => m.User).
+            Where(m=>m.IsApprovedByFounder == false)
                 .ToListAsync();
 
             if (employees == null || employees.Count == 0)
@@ -235,6 +346,7 @@ public class EmployeeServices : ApplicationService, IEmployeeServices
                     data = null
                 };
             }
+            await _userManager.AddToRoleAsync(user, "Employee");
             var employee = _objectMapper.Map<EmployeeDto, Employee>(dto);
             var response = _objectMapper.Map<EmployeeResponseDto>(employee);
             employee.UserId = user.Id;
@@ -250,6 +362,7 @@ public class EmployeeServices : ApplicationService, IEmployeeServices
                     data = null
                 };
             }
+            employee.IsAppliedForEmploee = true;
             var result = await _employeeRepository.InsertAsync(employee);
 
             if (result == null)

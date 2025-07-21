@@ -1,0 +1,55 @@
+<div class="max-w-5xl mx-auto mt-12 p-8 bg-white shadow-xl rounded-xl border border-gray-200">
+  <button (click)="goBack()" class="bg-gray-300 text-black font-semibold px-4 py-2 mt-2 rounded hover:bg-gray-400">
+      Back
+    </button>
+  <h2 class="text-3xl font-extrabold mb-6 text-center text-blue-700">Employee Leave Requests</h2>
+
+  <ng-container *ngIf="leaveRequests.length > 0; else noRequests">
+    <div *ngFor="let request of leaveRequests" class="p-5 mb-6 rounded-lg border border-gray-100 shadow-sm bg-gray-50">
+      <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+        <!-- Left Info -->
+        <div class="text-sm sm:text-base">
+          <p><span class="font-semibold text-gray-800">Employee ID:</span> {{ request.employeeId }}</p>
+          <p><span class="font-semibold text-gray-800">Request ID:</span> {{ request.id }}</p>
+          <p>
+            <span class="font-semibold text-gray-800">Status:</span>
+            <span
+              [ngClass]="{
+                'text-yellow-600': request.status === 0,
+                'text-green-600': request.status === 1,
+                'text-red-500': request.status === 2
+              }"
+            >
+              {{ getStatusLabel(request.status) }}
+            </span>
+          </p>
+        </div>
+
+        <!-- Right Buttons -->
+        <div class="flex gap-2">
+          <button
+            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:opacity-50"
+            (click)="updateLeaveStatus(request, 1)"
+            [disabled]="request.status !== 0"
+          >
+            Approve
+          </button>
+
+          <button
+            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 disabled:opacity-50"
+            (click)="updateLeaveStatus(request, 2)"
+            [disabled]="request.status !== 0"
+          >
+            Reject
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noRequests>
+    <div class="text-center text-gray-500 py-10">
+      <p>No leave requests found.</p>
+    </div>
+  </ng-template>
+</div>

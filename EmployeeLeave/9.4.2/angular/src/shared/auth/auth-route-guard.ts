@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { PermissionCheckerService } from 'abp-ng2-module';
 import { AppSessionService } from '../session/app-session.service';
-
 import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable()
-export class AppRouteGuard  {
-
+export class AppRouteGuard {
     constructor(
         private _permissionChecker: PermissionCheckerService,
         private _router: Router,
@@ -19,6 +18,19 @@ export class AppRouteGuard  {
             return false;
         }
 
+        const token = abp.auth.getToken();
+        const decoded = jwtDecode(token);
+        const userRole = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+        console.log("at auth role is ", userRole)
+
+        // Check roles first if defined
+        const allowedRoles: string[] = route.data['allowedRoles'];
+        if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
+            this._router.navigate(['app/unauthorized']);
+            return false;
+        }
+
+        // Then check permissions if defined
         if (!route.data || !route.data['permission']) {
             return true;
         }

@@ -17,7 +17,7 @@ namespace EmployeeLeave.Migrator
 
             using (var bootstrapper = AbpBootstrapper.Create<EmployeeLeaveMigratorModule>())
             {
-                bootstrapper.IocManageMigratorr.IocContainer
+                bootstrapper.IocManager.IocContainer
                     .AddFacility<LoggingFacility>(
                         f => f.UseAbpLog4Net().WithConfig("log4net.config")
                     );

@@ -1608,6 +1608,12 @@ namespace EmployeeLeave.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("IsAppliedForEmploee")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsApprovedByFounder")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -1741,6 +1747,9 @@ namespace EmployeeLeave.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAppliedForEmployeeForManager")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsApproved_by_Founder")
@@ -2064,8 +2073,8 @@ namespace EmployeeLeave.Migrations
                         .WithMany("LeaveRequests")
                         .HasForeignKey("EmployeeId1");
 
-                    b.HasOne("EmployeeLeave.Model.Founder", "Founder")
-                        .WithMany("LeaveRequests")
+                    b.HasOne("EmployeeLeave.Authorization.Users.User", "User")
+                        .WithMany()
                         .HasForeignKey("Founder_Id_approved_rejected_BY")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -2081,9 +2090,9 @@ namespace EmployeeLeave.Migrations
 
                     b.Navigation("Employee");
 
-                    b.Navigation("Founder");
-
                     b.Navigation("LeaveType");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EmployeeLeave.Model.Founder", b =>
@@ -2212,11 +2221,6 @@ namespace EmployeeLeave.Migrations
                 });
 
             modelBuilder.Entity("EmployeeLeave.LeaveType", b =>
-                {
-                    b.Navigation("LeaveRequests");
-                });
-
-            modelBuilder.Entity("EmployeeLeave.Model.Founder", b =>
                 {
                     b.Navigation("LeaveRequests");
                 });

@@ -1,0 +1,52 @@
+.unauthorized-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f7f7f7;
+  text-align: center;
+  padding: 2rem;
+}
+
+.unauthorized-title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #e53e3e; // red-600
+  margin-bottom: 1rem;
+}
+
+.unauthorized-message {
+  font-size: 1.25rem;
+  color: #4a5568; // gray-700
+  margin-bottom: 2rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  background-color: #3182ce; // blue-600
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #2b6cb0; // blue-700
+  }
+
+  &.btn-secondary {
+    background-color: #718096; // gray-600
+    &:hover {
+      background-color: #4a5568; // gray-700
+    }
+  }
+}

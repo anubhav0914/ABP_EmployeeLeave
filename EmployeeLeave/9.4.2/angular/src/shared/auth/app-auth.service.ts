@@ -63,6 +63,9 @@ export class AppAuthService {
                 authenticateResult.expireInSeconds,
                 this.rememberMe
             );
+        if(abp.session.tenantId != null || abp.session.tenantId != 0)
+           this._router.navigate(["app/dashboard/user"]);
+        
         } else {
             // Unexpected result!
 
@@ -94,8 +97,9 @@ export class AppAuthService {
         if (initialUrl.indexOf('/login') > 0) {
             initialUrl = AppConsts.appBaseUrl;
         }
-
-        location.href = initialUrl;
+        
+        if(abp.session.tenantId === null || abp.session.tenantId === 0)
+                location.href = initialUrl;
     }
 
     private clear(): void {

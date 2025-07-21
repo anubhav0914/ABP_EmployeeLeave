@@ -16,6 +16,7 @@ public class Manager : Entity<long>
     public int Work_experince_year { get; set; }
 
     public bool IsActive { get; set; } = false;
+    public bool IsAppliedForEmployeeForManager { get; set; } = false;
 
     public bool IsApproved_by_Founder { get; set; } = false;
 

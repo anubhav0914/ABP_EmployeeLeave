@@ -19,4 +19,6 @@ public interface IManagerServices : IApplicationService
     public Task<ApiResponse<ManagerResponseDto>> DeleteManager(long id);
     public Task<ApiResponse<ManagerResponseDto>> UpdateManager(ManagerDto dto);
 
+    public Task<ApiResponse<List<ManagerResponseDto>>> GetMangerRoleRequests();
+    public Task<ApiResponse<List<ManagerResponseDto>>> GetMangerRoleApproved();
 }

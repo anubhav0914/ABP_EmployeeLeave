@@ -19,7 +19,7 @@ public class LeaveRequestConfiguration : IEntityTypeConfiguration<LeaveRequest>
                .IsRequired(true)
                .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(lr => lr.Founder)
+        builder.HasOne(lr => lr.User)
                .WithMany()
                .HasForeignKey(lr => lr.Founder_Id_approved_rejected_BY)
                .IsRequired(false) 

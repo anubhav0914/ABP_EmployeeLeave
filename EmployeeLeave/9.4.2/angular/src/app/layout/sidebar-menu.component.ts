@@ -7,7 +7,7 @@ import {
     PRIMARY_OUTLET
 } from '@angular/router';
 import {BehaviorSubject} from 'rxjs';
-import {filter} from 'rxjs/operators';
+// import {filter} from 'rxjs/operators';
 import {MenuItem} from '@shared/layout/menu-item';
 
 @Component({
@@ -50,10 +50,36 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
                 'Pages.Roles'
             ),
             new MenuItem(
-                this.l('Employees'),
+                this.l('All Employees'),
                 '/app/employees',
                 'fas fa-theater-masks',
-                ''
+                'Employee.View'
+            ),
+           
+            new MenuItem(
+                this.l('All Leave Request'),
+                '/app/leaverequest',
+                'fas fa-theater-masks',
+                'LeaveRequest.ApproveReject'
+            ),
+            new MenuItem(
+                this.l('Employee Management'),
+                '/app/employees/withStatus',
+                'fas fa-theater-masks',
+                'Employee'
+            ),
+            new MenuItem(
+                this.l('Leave Types Management'),
+                '/app/leaveType/management',
+                'fas fa-theater-masks',
+                'LeaveType.Create'
+            ),
+           
+            new MenuItem(
+                this.l('Manager Management'),
+                '/app/manager/management',
+                'fas fa-theater-masks',
+                'Pages.Users'
             ),
             new MenuItem(
                 this.l('Tenants'),
@@ -61,6 +87,12 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
                 'fas fa-building',
                 'Pages.Tenants'
             ),
+            // new MenuItem(
+            //     this.l('User DashBoard'),
+            //     '/app/dashboard/user',
+            //     'fas fa-building',
+            //     'LeaveRequest.Create'
+            // ),
             new MenuItem(
                 this.l('Users'),
                 '/app/users',

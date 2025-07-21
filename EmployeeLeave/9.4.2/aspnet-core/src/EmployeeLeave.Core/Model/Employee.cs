@@ -18,6 +18,10 @@ public class Employee : Entity<long>
     public string Department { get; set; }
     public long UserId { get; set; }
 
+    public bool IsAppliedForEmploee { get; set; } = false;
+    public bool IsApprovedByFounder { get; set; } = false;
+
+
     public virtual User User { get; set; }
     public int Work_experince_year { get; set; }
     public DateOnly DateOfJoining { get; set; }
