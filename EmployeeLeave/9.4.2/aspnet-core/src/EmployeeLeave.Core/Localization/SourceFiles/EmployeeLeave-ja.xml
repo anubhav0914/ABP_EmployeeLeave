@@ -18,9 +18,10 @@
     <text name="Password" value="パスワード" />
     <text name="RememberMe" value="ログイン情報を記憶する" />
     <text name="LogIn" value="ログイン" />
-
     <text name="LoginFailed" value="ログイン失敗!" />
+    <text name="AllEmployess" value="saare majddor" />
 
+    
     <text name="NameSurname" value="名 姓" />
     <text name="UserName" value="ユーザ名" />
     <text name="Name" value="名前" />

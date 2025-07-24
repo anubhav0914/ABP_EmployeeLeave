@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { LeaveRequestServices } from '../../services/leave-request-services';
@@ -22,7 +22,8 @@ export class LeaveApprovalComponent implements OnInit {
   constructor(
     private leaveService: LeaveRequestServices,
     private founderService: FounderService,
-    private location : Location
+    private location : Location,
+    private changeDetection : ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -34,10 +35,13 @@ export class LeaveApprovalComponent implements OnInit {
     next: (response) => {
       console.log('full response', response);
       this.leaveRequests = response?.result?.data || [];
+      this.changeDetection.detectChanges();
     },
     error: (err) => {
       console.error('Failed to fetch leave requests', err);
       this.leaveRequests = [];
+      this.changeDetection.detectChanges();
+
     }
   });
 }
@@ -64,9 +68,13 @@ goBack():void{
         console.log("recived resopnse" );
         request.status = status; // Update locally
         this.getLeaveRequests();
+      this.changeDetection.detectChanges();
+
       },
       error: (err) => {
-        console.error('Failed to update status', err);
+          console.error('Failed to update status', err);
+      this.changeDetection.detectChanges();
+
       }
     });
   }

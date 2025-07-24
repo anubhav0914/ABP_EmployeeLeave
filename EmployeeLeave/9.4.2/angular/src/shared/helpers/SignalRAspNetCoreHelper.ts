@@ -19,6 +19,16 @@ export class SignalRAspNetCoreHelper {
         const script = document.createElement('script');
         if (callback) {
             script.onload = () => {
+                console.log("✅ abp.signalr-client.js loaded");
+
+            // 🔁 Register notification handler
+            abp.event.on('abp.notifications.received', (userNotification) => {
+                console.log('📩 Notification received: ', userNotification);
+                // You can show a toast or custom notification here
+            });
+
+            // 🚀 Connect manually
+            abp.signalr.connect();
                 callback();
             };
         }

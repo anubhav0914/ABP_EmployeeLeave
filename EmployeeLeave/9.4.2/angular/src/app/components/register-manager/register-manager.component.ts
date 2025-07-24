@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TokenService } from '@node_modules/abp-ng2-module'; // adjust this import if using a custom TokenService
 import { Router } from '@angular/router';
@@ -24,7 +24,8 @@ export class RegisterManagerComponent implements OnInit {
     private tokenService: TokenService,
     private router: Router,
     private managerService: ManagerService,
-    private location : Location
+    private location : Location,
+    private changeDection : ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +44,7 @@ export class RegisterManagerComponent implements OnInit {
       const decoded: any = jwtDecode(token);
       this.userIdFromToken = Number(decoded?.userId || decoded?.sub || 0);
     }
+    this.changeDection.detectChanges()
   }
 
   goBack() : void {
@@ -62,5 +64,7 @@ export class RegisterManagerComponent implements OnInit {
       next: () => this.router.navigate(['/']),
       error: (err) => console.error('Error creating manager:', err)
     });
+    this.changeDection.detectChanges();
+
   }
 }

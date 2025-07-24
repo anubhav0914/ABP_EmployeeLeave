@@ -49,8 +49,6 @@ export class LoginComponent extends AppComponentBase {
 
       const decoded: any = jwtDecode(token); // ✅ Decode the token
       const role = decoded?.role || decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-      console.log(role)
-      console.log(token)
       switch (role) {
         case 'Employee':
           this._router.navigate(['app/dashboard/employee']);

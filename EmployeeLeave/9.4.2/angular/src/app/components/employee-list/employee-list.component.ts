@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EmployeeService } from '../../services/employee.service';
 import { Location } from '@angular/common';
@@ -16,7 +16,7 @@ export class EmployeeListComponent implements OnInit {
   loading = true;
   error: string | null = null;
 
-  constructor(private employeeService: EmployeeService,private location : Location
+  constructor(private employeeService: EmployeeService,private location : Location,private chageDetection : ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -31,10 +31,12 @@ export class EmployeeListComponent implements OnInit {
       console.log('Full response:', res);
       this.employees = res?.result?.data ?? []; // ✅ Correctly pulling from nested structure
       this.loading = false;
+      this.chageDetection.detectChanges();
     },
     error: (err) => {
       this.error = 'Failed to load employee data.';
       this.loading = false;
+      this.chageDetection.detectChanges();
       console.error(err);
     }
   });

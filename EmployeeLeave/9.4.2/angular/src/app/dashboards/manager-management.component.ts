@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ManagerService } from '../services/manager-servoices';
 import { FounderService } from '../services/founder-services';
 import { CommonModule } from '@angular/common';
@@ -19,7 +19,8 @@ export class ManagerManagementComponent implements OnInit {
   constructor(
     private managerService: ManagerService,
     private founderService: FounderService,
-    private location : Location
+    private location : Location,
+    private changeDetection : ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -30,14 +31,19 @@ export class ManagerManagementComponent implements OnInit {
     this.managerService.gellAll().subscribe(res => {
       this.allManagers = res.result?.data;
       console.log("all managers", this.allManagers);
+      this.changeDetection.detectChanges();
     });
 
     this.managerService.getApproved().subscribe(res => {
       this.approvedManagers = res.result?.data;
+      this.changeDetection.detectChanges();
+
     });
 
     this.managerService.getREquested().subscribe(res => {
       this.requestedManagers = res.result?.data;
+      this.changeDetection.detectChanges();
+
     });
   }
 
@@ -50,5 +56,6 @@ export class ManagerManagementComponent implements OnInit {
       alert('Manager approved!');
       this.loadData();
     });
+    this.changeDetection.detectChanges();
   }
 }

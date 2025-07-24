@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ManagerResponseDto } from '../../shared/service-proxies/employee/model/managerResponseDto'
 import { ManagerResponseDtoListApiResponse } from '../../shared/service-proxies/employee/model/managerResponseDtoListApiResponse'
@@ -22,7 +22,8 @@ export class ManagerDashboardComponent implements OnInit {
   constructor(
     private router: Router,
     private managerService: ManagerService,
-    private locatio : Location
+    private locatio : Location,
+    private chageDetection : ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -50,11 +51,14 @@ export class ManagerDashboardComponent implements OnInit {
           console.log(this.manager)
           this.isApproved = foundManager.isApproved_by_Founder === true;
           this.loading = false;
+          this.chageDetection.detectChanges();
         }
       },
       error: (err) => {
         console.error('Error fetching approved managers:', err);
         this.loading = false;
+        this.chageDetection.detectChanges();
+
       }
     });
 

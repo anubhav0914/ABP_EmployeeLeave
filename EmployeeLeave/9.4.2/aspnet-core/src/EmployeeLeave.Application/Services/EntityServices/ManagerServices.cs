@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Abp;
 using Abp.Application.Services;
 using Abp.Domain.Repositories;
+using Abp.Notifications;
+using Abp.Runtime.Session;
 using AutoMapper;
 using EmployeeLeave.Authorization.Roles;
 using EmployeeLeave.Authorization.Users;
@@ -29,6 +32,9 @@ public class ManagerServices : ApplicationService, IManagerServices
     private readonly UserManager<User> _userManager;
     private readonly IMapper _mapper;
         private readonly RoleManager _roleManager;
+         private readonly IRepository<Founder, long> _founderRepository;
+    private readonly IAbpSession _abpSession;
+    private readonly INotificationPublisher _notificationPublisher;
 
 
     public ManagerServices(IRepository<Employee, long> employeeRepository,
@@ -36,6 +42,9 @@ public class ManagerServices : ApplicationService, IManagerServices
       UserManager<User> userManager,
       IMapper mapper,
       IRepository<Manager, long> managerReposotory,
+      IRepository<Founder, long> founderREpository,
+            INotificationPublisher notificationPublisher,
+            IAbpSession abpSession,
       RoleManager roleManager)
     {
         _employeeRepository = employeeRepository;
@@ -44,6 +53,9 @@ public class ManagerServices : ApplicationService, IManagerServices
         _mapper = mapper;
         _managerRepository = managerReposotory;
         _roleManager = roleManager;
+        _founderRepository = founderREpository;
+        _abpSession = abpSession;
+        _notificationPublisher = notificationPublisher;
     }
     public async Task<IActionResult> ApporveLeave(ApproveLeaveDto dto)
     {
@@ -328,7 +340,10 @@ public class ManagerServices : ApplicationService, IManagerServices
     public async Task<IActionResult> RegisterManger(ManagerDto dto)
     {
         var existUser = await _userManager.FindByIdAsync(dto.UserId.ToString());
-        
+         var tenantId = AbpSession.TenantId;
+
+      var founder =  await _founderRepository.FirstOrDefaultAsync(f => f.TenantId == tenantId &&  f.UserName == "theFounder");
+
         if (existUser == null)
         {
             return new BadRequestObjectResult("there is now user with this id");
@@ -339,6 +354,12 @@ public class ManagerServices : ApplicationService, IManagerServices
         manager.IsApproved_by_Founder = false;
         
         var result = await _managerRepository.InsertAsync(manager);
+            var userIdentifier = new UserIdentifier(_abpSession.TenantId, founder.UserId);
+             await _notificationPublisher.PublishAsync(
+              "LeaveApprovedNotification",
+              new MessageNotificationData($"An user is Applied for a role of Manager with Id as  {manager.Id}! "),
+              userIds: new[] { userIdentifier }
+             );
 
         if (result != null)
         {

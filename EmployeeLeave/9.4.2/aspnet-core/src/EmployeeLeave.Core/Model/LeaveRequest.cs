@@ -11,10 +11,11 @@ public enum LeaveStatus
     Approved,
     Rejected
 }
-public class LeaveRequest : Entity<long>
+public class LeaveRequest : Entity<long> ,IMustHaveTenant
 {
 
     public long EmployeeId { get; set; }
+    public int TenantId { get; set; }
     // naivgation
     public Employee Employee { get; set; }
 

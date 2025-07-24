@@ -47,7 +47,7 @@ export class RegisterEmployeeComponent implements OnInit {
         console.log('Employee registered successfully:', res);
         // ✅ Optionally navigate to a success page or dashboard
         alert("Applied for the employee role ,Please wait Founder will Approve you soon")
-        this.router.navigate(['app/dashboard/employee']);
+        this.router.navigate(['app/dashboard/user']);
       },
       error: (err) => {
         console.error('Error registering employee:', err);

@@ -42,15 +42,15 @@ namespace EmployeeLeave.EntityFrameworkCore.Seed
                 var permissionManager = iocResolver.Resolve<IPermissionManager>();
                 var tenatmanger = iocResolver.Resolve<TenantManager>();
 
-                new DefaultFounderCreator(userManager, roleManager, founderRepository, unitOfWorkManager,tenatmanger)
-                    .CreateAsync().GetAwaiter().GetResult();
-            new RolesDataSeeder(
-                        roleManager,
-                        userManager,
-                        unitOfWorkManager,
-                        permissionManager,
-                        tenatmanger
-                            ).SeedAsync().GetAwaiter().GetResult();
+            //     new DefaultFounderCreator(userManager, roleManager, founderRepository, unitOfWorkManager,tenatmanger)
+            //         .CreateAsync().GetAwaiter().GetResult();
+            // new RolesDataSeeder(
+            //             roleManager,
+            //             userManager,
+            //             unitOfWorkManager,
+            //             permissionManager,
+            //             tenatmanger
+            //                 ).SeedAsync().GetAwaiter().GetResult();
 
                 context.SaveChanges();
 

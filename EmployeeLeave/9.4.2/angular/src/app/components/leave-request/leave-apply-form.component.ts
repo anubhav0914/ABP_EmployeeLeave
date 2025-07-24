@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { LeaveRequestServices } from '../../services/leave-request-services';
@@ -28,7 +28,8 @@ export class LeaveApplyFormComponent implements OnInit {
     private leaveTypeService: LeaveTypeServices,
     private leaveRequestService: LeaveRequestServices,
     private employeeService: EmployeeService,
-    private location:  Location
+    private location:  Location,
+    private chageDetection : ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -53,19 +54,22 @@ export class LeaveApplyFormComponent implements OnInit {
      this.employeeService.getEmployeeByUserId(id).subscribe(res=>{
      this.employee = res.result?.data || undefined
      this.id = this.employee?.id
+     this.chageDetection.detectChanges();
      console.log(this.employee)
      })
   }
   loadLeaveTypes() {
     this.leaveTypeService.getAll().subscribe(res => {
       this.leaveTypes = res.result?.data || [];
+     this.chageDetection.detectChanges()
+
     });
   }
 
   goBack() :void {
     this.location.back();
   }  
-  
+
   onSubmit() {
     if (this.leaveForm.invalid) return;
 
@@ -85,5 +89,7 @@ export class LeaveApplyFormComponent implements OnInit {
       alert('Leave applied successfully!');
       this.leaveForm.reset();
     });
+    this.chageDetection.detectChanges()
+
   }
 }

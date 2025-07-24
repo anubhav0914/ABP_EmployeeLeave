@@ -17,6 +17,8 @@ using Abp.AspNetCore.SignalR.Hubs;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.IO;
+using StackExchange.Redis;
+using EmployeeLeave.Web.Host.SignalR;
 
 namespace EmployeeLeave.Web.Host.Startup
 {
@@ -33,6 +35,8 @@ namespace EmployeeLeave.Web.Host.Startup
         {
             _hostingEnvironment = env;
             _appConfiguration = env.GetAppConfiguration();
+            Console.WriteLine($"My App PID  ,.......................: {Environment.ProcessId}");
+
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -79,6 +83,18 @@ namespace EmployeeLeave.Web.Host.Startup
                     )
                 )
             );
+            // Redis for the cache storage data 
+            services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = "localhost:6379"; // or your Redis server
+                    options.InstanceName = "EmployeeLeave_";
+                });
+
+            services.AddSingleton<ISubscriber>(sp =>
+                     sp.GetRequiredService<IConnectionMultiplexer>().GetSubscriber());
+
+            services.AddSignalR();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

@@ -12,25 +12,26 @@ export class AppRouteGuard {
         private _sessionService: AppSessionService,
     ) { }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+        // Wait for session to be initialized (in case login is in progress)
         if (!this._sessionService.user) {
+            await this._sessionService.init(); // wait for session info to load
+        }
+
+        const token = abp.auth.getToken();
+        const userRole = this.getUserRoleFromToken(token);
+
+        if (!this._sessionService.user || !userRole) {
             this._router.navigate(['/account/login']);
             return false;
         }
 
-        const token = abp.auth.getToken();
-        const decoded = jwtDecode(token);
-        const userRole = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-        console.log("at auth role is ", userRole)
-
-        // Check roles first if defined
         const allowedRoles: string[] = route.data['allowedRoles'];
         if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
             this._router.navigate(['app/unauthorized']);
             return false;
         }
 
-        // Then check permissions if defined
         if (!route.data || !route.data['permission']) {
             return true;
         }
@@ -43,11 +44,25 @@ export class AppRouteGuard {
         return false;
     }
 
-    canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
         return this.canActivate(route, state);
     }
 
-    selectBestRoute(): string {
+    private getUserRoleFromToken(token: string | null): string | null {
+        if (!token || token.trim() === '' || !token.includes('.')) {
+            return null;
+        }
+
+        try {
+            const decoded: any = jwtDecode(token);
+            return decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || null;
+        } catch (error) {
+            console.error('Invalid token:', error);
+            return null;
+        }
+    }
+
+    private selectBestRoute(): string {
         if (!this._sessionService.user) {
             return '/account/login';
         }

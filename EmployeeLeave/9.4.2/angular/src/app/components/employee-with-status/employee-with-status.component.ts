@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { EmployeeService } from '../../services/employee.service';
 import { FounderService } from '../../services/founder-services';
 import { CommonModule } from '@angular/common';
@@ -20,7 +20,8 @@ export class EmployeeWithStatusComponent implements OnInit {
   constructor(
     private employeeService: EmployeeService,
     private founderService: FounderService,
-    private location : Location
+    private location : Location,
+    private chageDetection : ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -30,15 +31,20 @@ export class EmployeeWithStatusComponent implements OnInit {
   loadData() {
     this.employeeService.getAll().subscribe(res => {
       this.allEmployeess = res.result?.data;
+      this.chageDetection.detectChanges();
       console.log("All Employees", this.allEmployeess);
     });
 
     this.employeeService.getApprovedEmployees().subscribe(res => {
       this.approvedEmployees = res.result?.data;
+      this.chageDetection.detectChanges();
+
     });
 
     this.employeeService.getRequestedEmployees().subscribe(res => {
       this.requestedEmployees = res.result?.data;
+      this.chageDetection.detectChanges();
+
     });
   }
 
@@ -46,6 +52,8 @@ export class EmployeeWithStatusComponent implements OnInit {
     this.founderService.approveEmployee(id).subscribe(() => {
       alert('Employee approved!');
       this.loadData();
+      this.chageDetection.detectChanges();
+
     });
   }
 

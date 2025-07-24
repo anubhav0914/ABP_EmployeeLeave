@@ -117,17 +117,12 @@ import {ManagerDashboardComponent} from "./components/manager-dashboard/manager-
                     {
                         path: 'manager/register',
                         component: RegisterManagerComponent,
-
-
                     },
-                    
                     {
-                        
                         path: 'dashboard/user',
                         component: RoleSelectionComponent
                     },
                     {
-                        
                         path: 'apply/leave',
                         component: LeaveApplyFormComponent,
                         canActivate: [AppRouteGuard],
@@ -136,8 +131,6 @@ import {ManagerDashboardComponent} from "./components/manager-dashboard/manager-
                     {
                         path: 'register/employee',
                         component: RegisterEmployeeComponent,
-                        canActivate: [AppRouteGuard],
-                        data: { allowedRoles: ['Employee', 'Manager'] }
                     },
 
                     {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { EmployeeServicesService } from '../../shared/service-proxies/employee/api/employeeServices.service';
 import { EmployeeResponseDto } from '../../shared/service-proxies/employee/model/employeeResponseDto';
 import { TokenService } from 'abp-ng2-module';
@@ -19,13 +19,14 @@ export class EmployeeDashboardComponent implements OnInit {
   employee: EmployeeResponseDto | null = null;
   loading = true;
   error: string | null = null;
-  notFound = false; // ✅ FIXED: must be initialized
+  notFound = false; 
 
   constructor(
     private employeeService: EmployeeServicesService,
     private tokenService: TokenService,
     private router: Router,
-    private location: Location
+    private location: Location,
+     private cdRef: ChangeDetectorRef 
   ) {}
 
  ngOnInit(): void {
@@ -43,6 +44,7 @@ export class EmployeeDashboardComponent implements OnInit {
     if (!userId) {
       this.error = 'User ID not found in token.';
       this.loading = false;
+       this.cdRef.detectChanges(); 
       return;
     }
     
@@ -57,10 +59,13 @@ export class EmployeeDashboardComponent implements OnInit {
           this.notFound = true;
         }
         this.loading = false;
+        this.cdRef.detectChanges();
+
       },
       error: (err) => {
         this.error = 'Failed to load employee data.';
         this.loading = false;
+         this.cdRef.detectChanges(); 
         console.error(err);
       },
     });

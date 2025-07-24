@@ -31,7 +31,7 @@
       [class.bg-white]="activeTab !== 'requests'"
       [class.text-blue-600]="activeTab !== 'requests'"
       (click)="activeTab = 'requests'">
-      Manager Employee
+       Employee requested
     </button>
   </div>
 
@@ -70,7 +70,7 @@
 
   <!-- Manager Requests -->
   <div *ngIf="activeTab === 'requests'" class="space-y-4">
-    <h2 class="text-xl font-semibold text-yellow-700">Manager Requests</h2>
+    <h2 class="text-xl font-semibold text-yellow-700">Employee Requests</h2>
     <div *ngIf="requestedEmployees?.length > 0; else noRequests">
       <div *ngFor="let employee of requestedEmployees" class="p-4 bg-yellow-100 rounded-md shadow flex justify-between items-center">
         <div>

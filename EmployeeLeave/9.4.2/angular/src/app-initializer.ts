@@ -31,6 +31,7 @@ export class AppInitializer {
             abp.event.trigger('abp.dynamicScriptsInitialized');
             // do not use constructor injection for AppSessionService
             const appSessionService = this._injector.get(AppSessionService);
+            debugger
             appSessionService.init().then(
               (result) => {
                 abp.ui.clearBusy();

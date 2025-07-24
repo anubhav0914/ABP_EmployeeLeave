@@ -1,19 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { EmployeeResponseDto } from '../../shared/service-proxies/employee/model/employeeResponseDto';
 import { EmployeeService } from '../../services/employee.service';
 import { LeaveRequestServices } from '../../services/leave-request-services';
-import { LeaveRequestCreateUpdateDtoApiResponse } from '../../shared/service-proxies/employee/model/leaveRequestCreateUpdateDtoApiResponse';
 import { jwtDecode } from '@node_modules/jwt-decode/build/cjs';
-import { CommonModule } from '@node_modules/@angular/common';
-import { Location } from '@node_modules/@angular/common';
+import { CommonModule, Location } from '@node_modules/@angular/common';
+import { EmployeeNotificationComponent } from '../employee/employee-notification/employee-notification.component';
 
 @Component({
   selector: 'app-employee-profile',
   templateUrl: './employee-profile.component.html',
-  standalone:true,
+  standalone: true,
   styleUrls: ['./employee-profile.component.scss'],
-  imports :[CommonModule]
+  imports: [CommonModule,EmployeeNotificationComponent]
 })
 export class EmployeeProfileComponent implements OnInit {
   employee: any | null = null;
@@ -25,25 +23,26 @@ export class EmployeeProfileComponent implements OnInit {
     private router: Router,
     private employeeService: EmployeeService,
     private leaveRequestService: LeaveRequestServices,
-    private location : Location
+    private location: Location,
+    private ngZone: NgZone,
+    private cdRef: ChangeDetectorRef // 👈 inject ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.fetchEmployeeData();
-    this.loadLeaveRequests();
   }
 
   fetchEmployeeData(): void {
-    const toekn = abp.auth.getToken();
-    const decode = jwtDecode(toekn);
-    console.log(decode)
-    const id =  Number(decode["sub"])
-    console.log(id)
+    const token = abp.auth.getToken();
+    const decoded: any = jwtDecode(token);
+    const id = Number(decoded["sub"]);
+
     this.employeeService.getEmployeeByUserId(id).subscribe({
       next: (res) => {
         this.employee = res.result.data;
-        console.log(this.employee)
         this.loading = false;
+        this.cdRef.detectChanges(); // 👈 force change detection
+        this.loadLeaveRequests(); // make sure this is after employee is set
       },
       error: (err) => {
         console.error('Failed to load employee data:', err);
@@ -52,7 +51,7 @@ export class EmployeeProfileComponent implements OnInit {
     });
   }
 
-  goBack() : void {
+  goBack(): void {
     this.location.back();
   }
 
@@ -61,12 +60,11 @@ export class EmployeeProfileComponent implements OnInit {
   }
 
   loadLeaveRequests(): void {
-
     this.leaveRequestService.getAll().subscribe({
       next: (res) => {
-        console.log("leave request",res)
-        this.leaveRequests = res.result?.data.filter(req => req.employeeId === this.employee.id);
+        this.leaveRequests = res.result?.data.filter(req => req.employeeId === this.employee?.id);
         this.showLeaveRequests = true;
+        this.cdRef.detectChanges(); // 👈 also ensure this is detected
       },
       error: (err) => {
         console.error('Failed to load leave requests:', err);

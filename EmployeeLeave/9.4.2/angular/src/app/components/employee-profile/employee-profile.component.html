@@ -1,4 +1,6 @@
+<app-employee-notification></app-employee-notification>
 <div class="profile-container">
+
   <div class="card">
     <h2 class="title">Employee Profile</h2>
 
@@ -32,6 +34,8 @@
     <table class="leave-table">
       <thead>
         <tr>
+          <th>Leave Request Id</th>
+
           <th>Leave Type</th>
           <th>Start Date</th>
           <th>End Date</th>
@@ -40,6 +44,8 @@
       </thead>
       <tbody>
         <tr *ngFor="let leave of leaveRequests">
+          <td>{{ leave.id }}</td>
+
           <td>{{ leave.leaveTypeId }}</td>
           <td>{{ leave.fromDate | date: 'mediumDate' }}</td>
           <td>{{ leave.toDate | date: 'mediumDate' }}</td>

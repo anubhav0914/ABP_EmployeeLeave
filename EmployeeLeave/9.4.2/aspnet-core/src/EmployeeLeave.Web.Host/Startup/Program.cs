@@ -1,4 +1,5 @@
-﻿using Abp.AspNetCore.Dependency;
+﻿using System;
+using Abp.AspNetCore.Dependency;
 using Abp.Dependency;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -10,6 +11,7 @@ namespace EmployeeLeave.Web.Host.Startup
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
+
         }
 
         internal static IHostBuilder CreateHostBuilder(string[] args) =>

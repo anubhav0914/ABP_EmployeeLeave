@@ -37,6 +37,7 @@ namespace EmployeeLeave
             Configuration.Settings.Providers.Add<AppSettingProvider>();
             
             Configuration.Localization.Languages.Add(new LanguageInfo("fa", "فارسی", "famfamfam-flags ir"));
+
             
             Configuration.Settings.SettingEncryptionConfiguration.DefaultPassPhrase = EmployeeLeaveConsts.DefaultPassPhrase;
             SimpleStringCipher.DefaultPassPhrase = EmployeeLeaveConsts.DefaultPassPhrase;

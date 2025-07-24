@@ -4,17 +4,24 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Abp;
 using Abp.Application.Services;
+using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Notifications;
+using Abp.Runtime.Session;
 using AutoMapper;
 using AutoMapper.Internal.Mappers;
 using EmployeeLeave.Authorization.Users;
 using EmployeeLeave.Domain.DTOs;
+using EmployeeLeave.Model;
 using EmployeeLeave.ResponseDTOs;
 using EmployeeLeave.Services.Interfaces;
+using EmployeeLeave.Sessions.Dto;
 using EmployeeLeave.Users.Dto;
 using EmployeeLeave.Utils;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,15 +34,25 @@ public class EmployeeServices : ApplicationService, IEmployeeServices
     private readonly IRepository<Employee, long> _employeeRepository;
     private readonly UserManager<User> _userManager;
     private readonly IMapper _objectMapper;
+    private readonly IRepository<Founder, long> _founderRepository;
+    private readonly IAbpSession _abpSession;
+    private readonly INotificationPublisher _notificationPublisher;
 
 
 
     public EmployeeServices(UserManager<User> userManager,
-        IRepository<Employee, long> employeeRepository, IMapper objectMapper)
+        IRepository<Employee, long> employeeRepository, IMapper objectMapper,
+        IRepository<Founder, long> founderREpository,
+            INotificationPublisher notificationPublisher,
+            IAbpSession abpSession
+        )
     {
         _userManager = userManager;
         _employeeRepository = employeeRepository;
         _objectMapper = objectMapper;
+        _founderRepository = founderREpository;
+        _abpSession = abpSession;
+        _notificationPublisher = notificationPublisher;
     }
     public async Task<ApiResponse<EmployeeResponseDto>> DeleteEmployee(long id)
     {
@@ -75,7 +92,7 @@ public class EmployeeServices : ApplicationService, IEmployeeServices
         }
     }
 
-
+    [AbpAuthorize("Employee.View")]
     public async Task<ApiResponse<List<EmployeeResponseDto>>> GetAllEmployee()
     {
         try
@@ -316,6 +333,7 @@ public class EmployeeServices : ApplicationService, IEmployeeServices
                 data = employeeDto
             };
         }
+        
         catch (Exception ex)
         {
             return new ApiResponse<EmployeeResponseDto>
@@ -336,6 +354,9 @@ public class EmployeeServices : ApplicationService, IEmployeeServices
         try
         {
             var user = await _userManager.FindByEmailAsync(dto.Email);
+            var tenantId = AbpSession.TenantId;
+            var founder =  await _founderRepository.FirstOrDefaultAsync(f => f.TenantId == tenantId &&  f.UserName == "theFounder");
+
             if (user == null)
             {
                 return new ApiResponse<EmployeeResponseDto>
@@ -362,8 +383,14 @@ public class EmployeeServices : ApplicationService, IEmployeeServices
                     data = null
                 };
             }
-            employee.IsAppliedForEmploee = true;
-            var result = await _employeeRepository.InsertAsync(employee);
+             employee.IsAppliedForEmploee = true;
+             var result = await _employeeRepository.InsertAsync(employee);
+             var userIdentifier = new UserIdentifier(_abpSession.TenantId, founder.UserId);
+             await _notificationPublisher.PublishAsync(
+              "LeaveApprovedNotification",
+              new MessageNotificationData($"An user is Applied for a role of Employee with Name as {dto.FirstName} {dto.LastName}! "),
+              userIds: new[] { userIdentifier }
+             );
 
             if (result == null)
             {

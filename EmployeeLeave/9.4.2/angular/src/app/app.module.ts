@@ -25,7 +25,6 @@ import { SidebarMenuComponent } from './layout/sidebar-menu.component';
 import { AuthModule } from './auth/auth.module';
 import { EmployeeServicesService } from './shared/service-proxies/employee/api/employeeServices.service';
 
-
 @NgModule({
     declarations: [
         AppComponent,
@@ -38,7 +37,7 @@ import { EmployeeServicesService } from './shared/service-proxies/employee/api/e
         SidebarComponent,
         SidebarLogoComponent,
         SidebarUserPanelComponent,
-        SidebarMenuComponent
+        SidebarMenuComponent,
     ],
     imports: [
         AppRoutingModule,

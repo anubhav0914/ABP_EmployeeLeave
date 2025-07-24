@@ -4,13 +4,14 @@ import { CommonModule } from '@angular/common';
 import { TokenService } from 'abp-ng2-module';
 import { jwtDecode } from 'jwt-decode';
 import { Location } from '@angular/common';
+import {UserNotificationComponent} from "../user-notification/user-notification.component"
 
 @Component({
   selector: 'app-role-selection',
   standalone: true,
   templateUrl: './role-selection.component.html',
   styleUrls: ['../../../style.css'],
-  imports: [CommonModule]
+  imports: [CommonModule,UserNotificationComponent]
 })
 export class RoleSelectionComponent implements OnInit {
   userId: number | null = null;

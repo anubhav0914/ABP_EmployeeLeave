@@ -6,30 +6,47 @@ using EmployeeLeave.Domain.DTOs;
 using EmployeeLeave.Model;
 using EmployeeLeave.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.SignalR;
+using Abp.RealTime;
+using Abp.Notifications;
+using Abp;
+using Abp.Runtime.Session;
 namespace EmployeeLeave.Services.EntityServices;
 
 public class FounderServices : ApplicationService, IFounderServices
-{   
+{
     private readonly IRepository<Employee, long> _employeeRepository;
     private readonly IRepository<Manager, long> _managerRepository;
 
 
     private readonly IRepository<LeaveRequest, long> _leaveRepository;
     private readonly IRepository<Founder, long> _founderRepository;
+    private readonly IRealTimeNotifier _realTimeNotifier;
+    private readonly IAbpSession _abpSession;
+    private readonly INotificationPublisher _notificationPublisher;
+
+
+
 
 
 
     public FounderServices(IRepository<Employee, long> employeeRepository,
-    IRepository<Manager, long> managerRepository,
-    IRepository<LeaveRequest, long> leaveRepository,
-    IRepository<Founder, long> founderREpository
+            IRepository<Manager, long> managerRepository,
+            IRepository<LeaveRequest, long> leaveRepository,
+            IRepository<Founder, long> founderREpository,
+            IRealTimeNotifier realTimeNotifier,
+            INotificationPublisher notificationPublisher,
+            IAbpSession abpSession
     )
     {
         _employeeRepository = employeeRepository;
         _leaveRepository = leaveRepository;
         _founderRepository = founderREpository;
-        _managerRepository  = managerRepository;
+        _managerRepository = managerRepository;
+        _realTimeNotifier = realTimeNotifier;
+        _abpSession = abpSession;
+        _notificationPublisher = notificationPublisher;
+
 
     }
 
@@ -43,8 +60,16 @@ public class FounderServices : ApplicationService, IFounderServices
             {
                 return new BadRequestObjectResult("No leave Reqest found Request not found.");
             }
-
+            
             exisitingEmployee.IsApprovedByFounder = true;
+
+             var userIdentifier = new UserIdentifier(_abpSession.TenantId, exisitingEmployee.UserId);
+             await _notificationPublisher.PublishAsync(
+              "LeaveApprovedNotification",
+              new MessageNotificationData($" You have been Approved as Employee . Welcome to our comunity ! "),
+              userIds: new[] { userIdentifier }
+             );
+
             await _employeeRepository.UpdateAsync(exisitingEmployee);
             return new OkObjectResult("Employee approved successfully.");
 
@@ -70,6 +95,14 @@ public class FounderServices : ApplicationService, IFounderServices
             leaveRequest.Status = dto.Status;
             leaveRequest.Founder_Id_approved_rejected_BY = dto.Approved_by_ID;
             await _leaveRepository.UpdateAsync(leaveRequest);
+
+            var userIdentifier = new UserIdentifier(_abpSession.TenantId, exisitingEmployee.UserId);
+             await _notificationPublisher.PublishAsync(
+              "LeaveApprovedNotification",
+              new MessageNotificationData($" Your recently requested leave has been {dto.Status} with request id {dto.RequestId} "),
+              userIds: new[] { userIdentifier }
+          );
+
             return new OkObjectResult("Leave approved successfully.");
 
         }
@@ -79,11 +112,11 @@ public class FounderServices : ApplicationService, IFounderServices
         }
     }
 
-    public  async Task<IActionResult> ApproveManager(long managerId)
+    public async Task<IActionResult> ApproveManager(long managerId)
     {
         try
         {
-            var manager = await _managerRepository.FirstOrDefaultAsync(m=>m.Id == managerId);
+            var manager = await _managerRepository.FirstOrDefaultAsync(m => m.Id == managerId);
 
             if (manager == null)
             {
@@ -92,6 +125,12 @@ public class FounderServices : ApplicationService, IFounderServices
 
             manager.IsApproved_by_Founder = true;
             await _managerRepository.UpdateAsync(manager);
+            var userIdentifier = new UserIdentifier(_abpSession.TenantId, manager.UserId);
+             await _notificationPublisher.PublishAsync(
+              "LeaveApprovedNotification",
+              new MessageNotificationData($" You have been Approved as Manager . Welcome to our comunity ! "),
+              userIds: new[] { userIdentifier }
+             );
             return new OkObjectResult("Manager approved successfully.");
 
         }

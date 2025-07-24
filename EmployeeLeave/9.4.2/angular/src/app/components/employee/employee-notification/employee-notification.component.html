@@ -1,0 +1,10 @@
+<div *ngIf="messages.length != 0" class="text-gray-500" >
+<div class="p-4 border rounded shadow bg-white max-w-md">
+  <h2 class="text-lg font-semibold mb-2">🔔 Notifications</h2>
+    <ul class="list-disc pl-5 space-y-2">
+      <li *ngFor="let msg of messages" class="text-sm text-gray-800">
+        {{ msg }}
+      </li>
+    </ul>
+  </div>
+</div>

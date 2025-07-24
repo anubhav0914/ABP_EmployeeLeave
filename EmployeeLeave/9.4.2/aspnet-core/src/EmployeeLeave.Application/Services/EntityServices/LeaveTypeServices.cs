@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Abp.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 
 public class LeaveTypeServices : ApplicationService, ILeaveTypeServices
 {
@@ -19,12 +20,12 @@ public class LeaveTypeServices : ApplicationService, ILeaveTypeServices
         _leaveTypeRepository = leaveTypeRepository;
         _mapper = mapper;
     }
-
     public async Task<ApiResponse<LeaveTypeDto>> AddLeaveType(LeaveTypeDto dto)
     {
         try
         {
             var entity = _mapper.Map<LeaveType>(dto);
+            entity.TenantId = AbpSession.TenantId.Value;
             var result = await _leaveTypeRepository.InsertAsync(entity);
 
             var resultDto = _mapper.Map<LeaveTypeDto>(result);

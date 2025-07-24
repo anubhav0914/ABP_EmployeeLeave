@@ -1,10 +1,12 @@
+<app-user-notification></app-user-notification>
+<app-employee-notification></app-employee-notification>
 <div class="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
   <h1 class="text-3xl font-bold mb-8 text-gray-800">Admin Dashboard</h1>
   
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
     <button
       class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 px-6 rounded-2xl shadow transition"
-      (click)="navigateTo('app/manager/management')"
+      (click)="navigateTo('app/employees')"
     >
       All Employee
     </button>
